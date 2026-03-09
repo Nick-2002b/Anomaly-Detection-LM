@@ -1,0 +1,139 @@
+{
+    "type" : "object",
+    "required" : [
+        "io", 
+        "parameters", 
+        "hyper_parameters", 
+        "train_parameters", 
+        "early_stop_parameters"
+    ],
+    "properties" : {
+        "io" : { 
+            "type" : "object",
+            "required" : [
+                "training_folder",
+                "validation_folder",
+                "test_folder",
+                "use_custom_dataset",
+                "out_folder"
+            ],
+            "properties" : {
+                "training_folder" : {"type" : "string"},
+                "validation_folder" : {"type" : "string"},
+                "test_folder" : {"type" : "string"},
+                "use_custom_dataset" : {"type" : "boolean"},
+                "out_folder" : {"type" : "string"}
+            }
+        },
+        "parameters" : {
+            "type" : "object",
+            "required" : [
+                "train",
+                "test",
+                "show_preview"
+            ],
+            "properties" : {
+                "train" : {"type" : "boolean"},
+                "test" : {"type" : "boolean"},
+                "show_preview" : {"type" : "boolean"}
+            }
+        },
+        "hyper_parameters" : {
+            "type" : "object",
+            "required" : [
+                "batch_size",
+                "epochs",
+                "learning_rate",
+                "momentum"
+            ],
+            "properties" : {
+                "batch_size" : {
+                    "type" : "number", 
+                    "minimum" : 1,
+                    "maximum" : 1024
+                },
+                "epochs" : {
+                    "type" : "number", 
+                    "minimum" : 1,
+                    "maximum" : 10000
+                },
+                "learning_rate" : {
+                    "type" : "number", 
+                    "minimum" : 0.000001,
+                    "maximum" : 100
+                },
+                "momentum" : {
+                    "type" : "number", 
+                    "minimum" : 0.000001,
+                    "maximum" : 100
+                }
+            }
+        },
+        "train_parameters" : {
+            "type" : "object",
+            "required" : [
+                "network_type",
+                "console_log_steps",
+                "metrics_computation_steps",
+                "target",
+                "target_evaluation_steps",
+                "reload_last_model"
+            ],
+            "properties" : {
+                "network_type" : {"type" : "string"},
+                "console_log_steps" : {
+                    "type" : "number", 
+                    "minimum" : 0,
+                    "maximum" : 10000
+                },
+                "metrics_computation_steps" : {
+                    "type" : "number", 
+                    "minimum" : 0,
+                    "maximum" : 10000
+                },
+                "target" : {
+                    "type" : "number",
+                    "minimum" : 0,
+                    "maximum" : 100
+                },
+                "target_evaluation_steps" : {
+                    "type" : "number", 
+                    "minimum" : 0,
+                    "maximum" : 10000
+                },
+                "reload_last_model" : {"type" : "boolean"}
+            }
+        },
+        "early_stop_parameters" : {
+            "type" : "object",
+            "required" : [
+                "es_check_steps",
+                "es_start_at_step",
+                "patience",
+                "improvement_rate"
+            ],
+            "properties" : {
+                "es_check_steps" : {
+                    "type" : "number", 
+                    "minimum" : 0,
+                    "maximum" : 10000
+                },
+                "es_start_at_step" : {
+                    "type" : "number", 
+                    "minimum" : 0,
+                    "maximum" : 10000
+                },
+                "patience" : {
+                    "type" : "number", 
+                    "minimum" : 1,
+                    "maximum" : 10000
+                },
+                "improvement_rate" : {
+                    "type" : "number", 
+                    "minimum" : 0,
+                    "maximum" : 100
+                }
+            }
+        }
+    }
+}
