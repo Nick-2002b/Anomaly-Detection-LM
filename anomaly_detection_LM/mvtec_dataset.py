@@ -40,7 +40,14 @@ class MVTecDataset(Dataset):
                         self.labels.append(label)
 
     def __len__(self):
-        pass
+        return len(self.image_paths)
 
     def __getitem__(self, idx):
-        pass
+        img_path = self.image_paths[idx]
+        image = Image.open(img_path).convert("RGB")
+        label = self.labels[idx]
+
+        if self.transform:
+            image = self.transform(image)
+
+        return image, label, str(img_path)
