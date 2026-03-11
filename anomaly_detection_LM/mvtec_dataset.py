@@ -8,7 +8,7 @@ import torchvision.transforms as T
 class MVTecDataset(Dataset):
     def __init__(self, root_dir: str, category: str, is_train: bool = True, transform=None):
         """
-        Dataset custom per MVTec AD.
+        Dataset custom for MVTec AD.
         """
         # Creiamo il percorso base, es: ./data/bottle
         self.root_dir = Path(root_dir) / category
@@ -17,6 +17,27 @@ class MVTecDataset(Dataset):
 
         self.image_paths = []
         self.labels = []  # 0 = immagine normale, 1 = immagine con anomalia
+
+        if self.is_train:
+            good_dir = self.root_dir / "train" / "good"
+
+            if not good_dir.exists():
+                raise FileNotFoundError(f"Training folder not found: {good_dir}")
+
+            for img_path in good_dir.glob("*.png"):
+                self.image_paths.append(img_path)
+                self.labels.append(0)
+        else:
+            test_dir = self.root_dir / "test"
+            if not test_dir.exists():
+                raise FileNotFoundError(f"Test folder not found: {test_dir}")
+
+            for defect_dir in test_dir.iterdir():
+                if defect_dir.is_dir():
+                    label = 0 if defect_dir.name == "good" else 1
+                    for img_path in defect_dir.glob("*.png"):
+                        self.image_paths.append(img_path)
+                        self.labels.append(label)
 
     def __len__(self):
         pass
