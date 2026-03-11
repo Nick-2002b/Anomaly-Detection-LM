@@ -1,6 +1,7 @@
 from pathlib import Path
 from PIL import Image
 import torch
+from cv2 import transform
 from torch.utils.data import Dataset, DataLoader
 import torchvision.transforms as T
 
@@ -19,6 +20,7 @@ class MVTecDataset(Dataset):
         self.labels = []  # 0 = immagine normale, 1 = immagine con anomalia
 
         if self.is_train:
+            # In training carichiamo SOLO le immagini perfette
             good_dir = self.root_dir / "train" / "good"
 
             if not good_dir.exists():
@@ -44,6 +46,8 @@ class MVTecDataset(Dataset):
 
     def __getitem__(self, idx):
         img_path = self.image_paths[idx]
+
+        # Usiamo PIL per caricare l'immagine perché torchvision.transforms lavora meglio con PIL
         image = Image.open(img_path).convert("RGB")
         label = self.labels[idx]
 
@@ -51,3 +55,25 @@ class MVTecDataset(Dataset):
             image = self.transform(image)
 
         return image, label, str(img_path)
+
+if __name__ == "__main__":
+    BASE_DIR = Path(__file__).parent.parent.resolve()
+    DATA_ROOT = BASE_DIR / "data"
+    CATEGORY = "bottle"
+
+    # Definiamo le trasformazioni: ridimensioniamo e convertiamo in Tensore PyTorch
+    transform_pipeline = T.Compose([
+        T.Resize((224, 224)),
+        T.ToTensor()
+    ])
+
+    print("Initializing Training Dataset")
+    train_dataset = MVTecDataset(DATA_ROOT, CATEGORY, is_train=True, transform=transform_pipeline)
+    print(f"Found {len(train_dataset)} images in training set.")
+
+    train_loader = DataLoader(train_dataset, batch_size=16, shuffle=True)
+    images, labels, paths = next(iter(train_loader))
+
+    print("\nBatch extraction test completed:")
+    print(f"Image batch shape: {images.shape}")
+    print(f"Labels shape: {labels.shape}")
