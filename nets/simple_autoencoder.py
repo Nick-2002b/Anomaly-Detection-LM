@@ -1,5 +1,7 @@
 import torch
 import torch.nn as nn
+from matplotlib.sphinxext.mathmpl import latex_math
+
 
 class SimpleAutoencoder(nn.Module):
     def __init__(self):
@@ -25,5 +27,8 @@ class SimpleAutoencoder(nn.Module):
 
             nn.Sigmoid()
         )
+
     def forward(self, x):
-        pass
+        latent = self.encoder(x)
+        reconstructed = self.decoder(latent)
+        return reconstructed
