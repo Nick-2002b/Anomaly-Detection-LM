@@ -1,11 +1,10 @@
 import torch
 import torch.nn as nn
-from matplotlib.sphinxext.mathmpl import latex_math
 
 
 class SimpleAutoencoder(nn.Module):
     def __init__(self):
-        super.__init__()
+        super(SimpleAutoencoder, self).__init__()
         self.encoder = None
         self.decoder = None
 
@@ -32,3 +31,16 @@ class SimpleAutoencoder(nn.Module):
         latent = self.encoder(x)
         reconstructed = self.decoder(latent)
         return reconstructed
+
+if __name__ == '__main__':
+    model = SimpleAutoencoder()
+    dummy_input = torch.randn(1, 3, 256, 256)
+    output = model(dummy_input)
+
+    print(f"Input Shape: {dummy_input.shape}")
+    print(f"Output Shape: {output.shape}")
+
+    if dummy_input.shape == output.shape:
+        print("Test passed!")
+    else:
+        print("Test failed!")

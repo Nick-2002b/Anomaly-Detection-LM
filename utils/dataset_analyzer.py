@@ -10,29 +10,29 @@ def analyze_mvtec_category(base_path: str):
     # 1. Analisi del Training Set
     train_good_dir = base_dir / "train" / "good"
     if not train_good_dir.exists():
-        print(f"Errore: Cartella non trovata in {train_good_dir}")
+        print(f"ERROR: Training folder not found in: {train_good_dir}")
         return
 
     train_images = list(train_good_dir.glob("*.png"))
-    print(f"--- STATISTICHE DATASET: {base_dir.name.upper()} ---")
-    print(f"Immagini di training (solo perfette): {len(train_images)}")
+    print(f"--- DATASET INFO: {base_dir.name.upper()} ---")
+    print(f"Training images (only good one): {len(train_images)}")
 
     # 2. Analisi del Test Set
     test_dir = base_dir / "test"
     test_categories = [d for d in test_dir.iterdir() if d.is_dir()]
 
-    print("\nImmagini di test:")
+    print("\nTest images:")
     total_test = 0
     anomalous_categories = []
 
     for cat in test_categories:
         num_imgs = len(list(cat.glob("*.png")))
-        print(f"  - {cat.name}: {num_imgs} immagini")
+        print(f"  - {cat.name}: {num_imgs} images")
         total_test += num_imgs
         if cat.name != "good":
             anomalous_categories.append(cat.name)
 
-    print(f"Totale immagini di test: {total_test}")
+    print(f"Total test images: {total_test}")
 
     # 3. Visualizzazione di un esempio
     # Prendiamo una prima immagine di training
@@ -56,7 +56,7 @@ def analyze_mvtec_category(base_path: str):
             sample_mask = cv2.imread(str(mask_path), cv2.IMREAD_GRAYSCALE)
         else:
             sample_mask = None
-            print(f"Attenzione: Maschera non trovata in {mask_path}")
+            print(f"Warning: Ground truth mask not found for {mask_path}")
 
         # Plottiamo tutto
         fig, axes = plt.subplots(1, 3, figsize=(15, 5))
@@ -76,8 +76,7 @@ def analyze_mvtec_category(base_path: str):
         plt.tight_layout()
         plt.show()
 
-
 if __name__ == "__main__":
     # Risale alla root del progetto partendo dalla posizione di questo script
-    percorso_dataset = Path(__file__).parent.parent / "data" / "bottle"
-    analyze_mvtec_category(percorso_dataset)
+    dataset_path = Path(__file__).parent.parent / "data" / "bottle"
+    analyze_mvtec_category(dataset_path)
