@@ -57,7 +57,7 @@ class MVTecDataset(Dataset):
         return image, label, str(img_path)
 
 if __name__ == "__main__":
-    BASE_DIR = Path(__file__).parent.parent.resolve()
+    BASE_DIR = Path(__file__).parent.resolve()
     DATA_ROOT = BASE_DIR / "data"
     CATEGORY = "bottle"
 
