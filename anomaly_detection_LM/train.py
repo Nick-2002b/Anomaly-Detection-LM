@@ -7,12 +7,14 @@ from nets.simple_autoencoder import SimpleAutoencoder
 from pathlib import Path
 from visual_util import ColoredPrint as cp
 from mvtec_dataset import MVTecDataset
+import math
 
 def train_baseline():
     BASE_DIR = Path(__file__).resolve().parent
     DATA_ROOT = BASE_DIR / "data"
     BATCH_SIZE = 16
     LEARNING_RATE = 1e-3
+    EPOCHS = 10
 
     device = torch.device(
         "cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
@@ -32,3 +34,39 @@ def train_baseline():
     model = SimpleAutoencoder().to(device)
     criterion = nn.MSELoss()
     optimizer = optim.Adam(model.parameters(), lr=LEARNING_RATE)
+
+    tr_steps_per_epoch = math.ceil(len(train_dataset)/BATCH_SIZE)
+
+    cp.purple(f"Training starts for {EPOCHS} epoche...")
+    model.train()
+
+    for epoch in range(EPOCHS):
+        running_loss = 0.0
+
+        for epoch_step, (images, _, _) in enumerate(train_loader):
+
+            cp.cyan(f'Epoch: {epoch + 1}, Step: {epoch_step + 1}/{tr_steps_per_epoch}')
+
+            # Spostiamo le immagini sulla scheda video (non-blocking aiuta con pin_memory)
+            images = images.to(device, non_blocking=True)
+
+            optimizer.zero_grad() # azzerra i gradienti(errori nei pesi)
+
+            # Forward pass: l'immagine attraversa l'autoencoder
+            reconstructed = model(images)
+
+            # Calcolo della Loss: confrontiamo l'ouput con l'Input
+            loss = criterion(reconstructed, images)
+
+            loss.backward()
+
+            # aggiorna i pesi della rete
+            optimizer.step()
+
+            running_loss += loss.item()
+
+        epoch_loss = running_loss / len(train_loader)
+        cp.purple(f"Epoch [{epoch + 1}/{EPOCHS}] - Loss: {epoch_loss:.6f}")
+
+    cp.green(f"Training ends for {EPOCHS} epoche...")
+
