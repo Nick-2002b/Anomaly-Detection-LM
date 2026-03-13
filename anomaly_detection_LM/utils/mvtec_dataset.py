@@ -1,7 +1,5 @@
 from pathlib import Path
 from PIL import Image
-import torch
-from cv2 import transform
 from torch.utils.data import Dataset, DataLoader
 import torchvision.transforms as T
 
@@ -57,7 +55,7 @@ class MVTecDataset(Dataset):
         return image, label, str(img_path)
 
 if __name__ == "__main__":
-    BASE_DIR = Path(__file__).parent.resolve()
+    BASE_DIR = Path(__file__).parent.parent.resolve()
     DATA_ROOT = BASE_DIR / "data"
     CATEGORY = "bottle"
 

@@ -5,8 +5,8 @@ import torch.nn as nn
 import torch.optim as optim
 from nets.simple_autoencoder import SimpleAutoencoder
 from pathlib import Path
-from visual_util import ColoredPrint as cp
-from mvtec_dataset import MVTecDataset
+from utils.visual_util import ColoredPrint as cp
+from utils.mvtec_dataset import MVTecDataset
 import math
 
 def train_baseline():
