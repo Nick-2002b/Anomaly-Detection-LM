@@ -1,7 +1,6 @@
 import torch
 import torch.nn as nn
 
-
 class SimpleAutoencoder(nn.Module):
     def __init__(self):
         super(SimpleAutoencoder, self).__init__()

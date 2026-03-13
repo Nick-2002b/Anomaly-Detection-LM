@@ -208,5 +208,5 @@ __marimo__/
 .DS_Store
 .idea/
 runs/
-data/*
-!data/
+anomaly_detection_LM/data/*
+!anomaly_detection_LM/data/
