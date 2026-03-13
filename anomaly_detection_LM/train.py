@@ -70,3 +70,12 @@ def train_baseline():
 
     cp.green(f"Training ends for {EPOCHS} epoche...")
 
+    save_dir = BASE_DIR/"runs"
+    save_dir.mkdir(exist_ok=True)
+    torch.save(model.state_dict(), save_dir/"base_autoencoder.pth")
+    cp.yellow(f"Model saved in {save_dir}/base_autoencoder.pth")
+
+if __name__ == "__main__":
+    train_baseline()
+
+
