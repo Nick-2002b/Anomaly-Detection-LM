@@ -8,8 +8,8 @@ import torch.optim as optim
 
 from pathlib import Path
 from metrics import Metrics
-from visual_util import ColoredPrint as cp
-from custom_dataset_shapes import CustomDatasetShapes
+from anomaly_detection_LM.utils.visual_util import ColoredPrint as cp
+
 
 torch.manual_seed(42)
 np.random.seed(42)

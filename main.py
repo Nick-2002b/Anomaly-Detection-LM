@@ -3,11 +3,10 @@ import shutil
 
 from pathlib import Path
 from net_runner import NetRunner
-from visual_util import ColoredPrint as cp
+from utils.visual_util import ColoredPrint as cp
 from torch.utils.tensorboard import SummaryWriter
 from config_helper import check_and_get_configuration
 from custom_dataset_shapes import CustomDatasetShapes
-import torch
 
 # Ottengo il percorso assoluto della cartella in cui si trova questo script
 BASE_DIR = Path(__file__).parent.resolve()
