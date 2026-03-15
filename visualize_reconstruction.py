@@ -1,8 +1,6 @@
 import torch
 from pathlib import Path
 
-from IPython.core.pylabtools import figsize
-from cv2.datasets import none
 import matplotlib.pyplot as plt
 
 from nets.simple_autoencoder import SimpleAutoencoder
