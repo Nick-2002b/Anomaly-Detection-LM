@@ -1,7 +1,9 @@
 import torch
 from pathlib import Path
 
+from IPython.core.pylabtools import figsize
 from cv2.datasets import none
+import matplotlib.pyplot as plt
 
 from nets.simple_autoencoder import SimpleAutoencoder
 from utils.visual_util import ColoredPrint as cp
@@ -18,7 +20,7 @@ def visualize_reconstruction():
     device = torch.device(
         "cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
 
-    model = SimpleAutoencoder.to(device)
+    model = SimpleAutoencoder().to(device)
 
     if not MODEL_PATH.exists():
         cp.red(f"Model not found: {MODEL_PATH}")
@@ -62,5 +64,25 @@ def visualize_reconstruction():
     original_np = original_img.squeeze().cpu().permute(1, 2, 0).numpy()
     reconstructed_np = reconstructed_img.squeeze().cpu().permute(1, 2, 0).numpy()
 
+    fig, axes = plt.subplots(1, 3, figsize=(15, 5))
 
+    axes[0].imshow(original_np)
+    axes[0].set_title("Original Image")
+    axes[0].axis('off')
 
+    axes[1].imshow(reconstructed_np)
+    axes[1].set_title("Reconstructed Image")
+    axes[1].axis('off')
+
+    im = axes[2].imshow(anomaly_map, cmap='magma') # magma, viridis, jet: diverse mappe di colori
+    axes[2].set_title("Anomaly Map")
+    axes[2].axis('off')
+
+    fig.colorbar(im, ax=axes[2], fraction= 0.046, pad=0.04)
+    plt.suptitle(f"Test file: {Path(img_path).name}", fontsize = 14)
+    cp.yellow(f"Path immagine: {img_path}")
+    plt.tight_layout()
+    plt.show()
+
+if __name__ == "__main__":
+    visualize_reconstruction()
