@@ -49,3 +49,18 @@ def visualize_reconstruction():
         cp.red(f"None image with anomalous found")
         return
 
+    # Passiamo l'immagine nella rete senza calcolare i gradienti(risparmia RAM e tempo)
+    with torch.no_grad():
+        reconstructed_img = model(original_img)
+
+    diff_map = torch.abs(original_img - reconstructed_img)
+
+    # Trasforma la differenza tra l'immagine ricostruita e originale in una mappa in bianco e nero, per vedere le differenze
+    anomaly_map = torch.mean(diff_map, dim=1).squeeze().cpu().numpy()
+
+    # Converte le immagini per matplotlib (da [C, H, W] a [H, W, C])
+    original_np = original_img.squeeze().cpu().permute(1, 2, 0).numpy()
+    reconstructed_np = reconstructed_img.squeeze().cpu().permute(1, 2, 0).numpy()
+
+
+
