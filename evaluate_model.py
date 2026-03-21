@@ -33,5 +33,23 @@ def evaluate_baseline():
 
     cp.yellow(f"Evaluating of {len(test_dataset)} test images...")
 
-    y_true = []
-    y_scores = []
+    y_true = [] # Le etichette reali (0 = buone, 1 = anomalia)
+    y_scores = [] # Il punteggio di anomalia predetto
+
+    with torch.no_grad():
+        for images, labels, paths in test_loader:
+            images = images.to(device)
+
+            reconstructed = model(images)
+
+            # Calcoliamo l'errore quadratico (MSE) per ogni pixel nella singola immagine
+            mse_map = (images - reconstructed) ** 2
+
+            # Calcoliamo l'Anomaly Score: prendiamo la media degli errori per canale,
+            # e poi il valore MASSIMO di tutta la mappa dell'immagine.
+            # Se c'è un'anomalia, ci sarà almeno un pixel con un errore altissimo.
+            mean_channels = torch.mean(mse_map, dim=1)
+            anomaly_score = torch.max(mean_channels).item()
+
+            y_true.append(labels.item())
+            y_scores.append(anomaly_score)
