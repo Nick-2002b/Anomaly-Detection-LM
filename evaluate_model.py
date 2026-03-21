@@ -5,7 +5,6 @@ import torchvision.transforms as T
 from torch.utils.data import DataLoader
 from pathlib import Path
 
-
 from utils.visual_util import ColoredPrint as cp
 from utils.mvtec_dataset import MVTecDataset
 from nets.simple_autoencoder import SimpleAutoencoder
@@ -53,3 +52,18 @@ def evaluate_baseline():
 
             y_true.append(labels.item())
             y_scores.append(anomaly_score)
+
+    auroc = roc_auc_score(y_true, y_scores)
+
+    cp.yellow("\n--- EVALUATION RESULT ---")
+    cp.cyan(f"Dataset> {CATEGORY.upper()}")
+    cp.cyan(f"AUROC Score: {auroc:.4f} ({auroc * 100:.2f}%)")
+
+    y_true_np = np.array(y_true)
+    y_scores_np = np.array(y_scores)
+
+    cp.cyan(f"Average score error to reconstruct GOOD images: {np.mean(y_scores_np[y_true_np == 0]):.4f}")
+    cp.cyan(f"Average score error to reconstruct ANOMALOUS images: {np.mean(y_scores_np[y_true_np == 1]):.4f}")
+
+if __name__ == "__main__":
+    evaluate_baseline()
