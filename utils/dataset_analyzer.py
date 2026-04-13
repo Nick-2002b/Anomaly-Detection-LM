@@ -1,7 +1,7 @@
 import cv2
 import matplotlib.pyplot as plt
 from pathlib import Path
-
+from utils.visual_util import ColoredPrint as cp
 
 def analyze_mvtec_category(base_path: str):
     base_dir = Path(base_path).resolve()
@@ -13,25 +13,25 @@ def analyze_mvtec_category(base_path: str):
         return
 
     train_images = list(train_good_dir.glob("*.png"))
-    print(f"--- DATASET INFO: {base_dir.name.upper()} ---")
-    print(f"Training images (only good one): {len(train_images)}")
+    cp.yellow(f"--- DATASET INFO: {base_dir.name.upper()} ---")
+    cp.cyan(f"Training images (only good one): {len(train_images)}")
 
     # 2. Analisi del Test Set
     test_dir = base_dir / "test"
     test_categories = [d for d in test_dir.iterdir() if d.is_dir()]
 
-    print("\nTest images:")
+    cp.yellow("\nTest images:")
     total_test = 0
     anomalous_categories = []
 
     for cat in test_categories:
         num_imgs = len(list(cat.glob("*.png")))
-        print(f"  - {cat.name}: {num_imgs} images")
+        cp.cyan(f"  - {cat.name}: {num_imgs} images")
         total_test += num_imgs
         if cat.name != "good":
             anomalous_categories.append(cat.name)
 
-    print(f"Total test images: {total_test}")
+    cp.cyan(f"Total test images: {total_test}")
 
     # 3. Visualizzazione di un esempio
     # Prendiamo una prima immagine di training
@@ -55,7 +55,7 @@ def analyze_mvtec_category(base_path: str):
             sample_mask = cv2.imread(str(mask_path), cv2.IMREAD_GRAYSCALE)
         else:
             sample_mask = None
-            print(f"Warning: Ground truth mask not found for {mask_path}")
+            cp.red(f"Warning: Ground truth mask not found for {mask_path}")
 
         # Plottiamo tutto
         fig, axes = plt.subplots(1, 3, figsize=(15, 5))
