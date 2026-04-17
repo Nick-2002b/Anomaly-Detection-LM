@@ -1,9 +1,6 @@
 import torch
 import torch.nn as nn
 
-from MVTec_Anomaly_Detection import reconstructed
-
-
 class OptimizedAutoencoder(nn.Module):
     def __init__(self):
         super(OptimizedAutoencoder, self).__init__()
@@ -38,6 +35,6 @@ class OptimizedAutoencoder(nn.Module):
         )
 
     def forward(self, x):
-        latent = self.decoder(x)
+        latent = self.encoder(x)
         reconstructed = self.decoder(latent)
         return reconstructed
