@@ -23,14 +23,21 @@ def train_baseline():
     transform_pipeline = T.Compose([T.Resize((256, 256)), T.ToTensor()])
     train_dataset = MVTecDataset(root_dir=DATA_ROOT, category="bottle", is_train=True, transform=transform_pipeline)
 
-    train_loader = DataLoader(
-        train_dataset,
-        batch_size=BATCH_SIZE,
-        shuffle=True,
-        pin_memory=True, # Velocizza il trasferimento dati verso la GPU
-        num_workers=8,
-        prefetch_factor=2 # La cpu prepara 2 batch in anticipi da passare alla GPU
-    )
+    if device.type == "mps":
+        train_loader = DataLoader(
+            train_dataset,
+            batch_size=BATCH_SIZE,
+            shuffle=True,
+        )
+    else:
+        train_loader = DataLoader(
+            train_dataset,
+            batch_size=BATCH_SIZE,
+            shuffle=True,
+            pin_memory=True, # Velocizza il trasferimento dati verso la GPU per CUDA
+            num_workers=8,
+            prefetch_factor=2 # La cpu prepara 2 batch in anticipi da passare alla GPU
+        )
     model = SimpleAutoencoder().to(device)
     criterion = nn.MSELoss()
     optimizer = optim.Adam(model.parameters(), lr=LEARNING_RATE)
