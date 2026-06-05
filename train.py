@@ -34,9 +34,7 @@ def train_baseline():
             train_dataset,
             batch_size=BATCH_SIZE,
             shuffle=True,
-            pin_memory=True, # Velocizza il trasferimento dati verso la GPU per CUDA
-            num_workers=8,
-            prefetch_factor=2 # La cpu prepara 2 batch in anticipi da passare alla GPU
+            pin_memory=True # Velocizza il trasferimento dati verso la GPU per CUDA
         )
     model = SimpleAutoencoder().to(device)
     criterion = nn.MSELoss()
@@ -84,5 +82,3 @@ def train_baseline():
 
 if __name__ == "__main__":
     train_baseline()
-
-
