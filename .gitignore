@@ -208,6 +208,4 @@ __marimo__/
 .DS_Store
 .idea/
 runs/
-/data/*
-!/data/
 .vscode/*
